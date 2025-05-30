@@ -1,0 +1,68 @@
+<mat-card>
+  <mat-card-header>
+    <h2>Register</h2>
+  </mat-card-header>
+  <mat-card-content>
+    <form #registerForm="ngForm" (submit)="register()">
+      <mat-form-field>
+        <mat-label>First Name</mat-label>
+        <input
+          matInput
+          [(ngModel)]="user.firstName"
+          name="firstName"
+          placeholder="First Name"
+          required
+        />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Last Name</mat-label>
+        <input
+          matInput
+          [(ngModel)]="user.lastName"
+          name="lastName"
+          placeholder="Last Name"
+          required
+        />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          [(ngModel)]="user.email"
+          name="email"
+          placeholder="Email"
+          required
+        />
+        <mat-icon matSuffix>email</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input
+          type="password"
+          matInput
+          [(ngModel)]="user.password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <mat-icon matSuffix>lock</mat-icon>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        [disabled]="!registerForm.form.valid"
+        color="primary"
+      >
+        Register
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <span>Already have an account? </span>
+      <a mat-button color="primary" routerLink="/login">Login</a>
+    </div>
+  </mat-card-content>
+</mat-card>

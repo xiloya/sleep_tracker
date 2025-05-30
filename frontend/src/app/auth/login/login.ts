@@ -7,6 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Auth } from '../../services/auth';
+import { HttpClientModule } from '@angular/common/http';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -19,6 +21,7 @@ import { FormsModule } from '@angular/forms';
     MatButtonModule,
     MatIconModule,
     RouterModule,
+    HttpClientModule,
   ],
   templateUrl: './login.html',
   styleUrl: './login.css',
@@ -28,27 +31,24 @@ export class Login {
     email: '',
     password: '',
   };
-  storedUser = {
-    email: 'test@gmail.com',
-    password: 'password123',
-  };
 
   loginValid: boolean = true;
   router = inject(Router);
-
-  validateLogin(email: string, password: string): boolean {
-    return (
-      email === this.storedUser.email && password === this.storedUser.password
-    );
-  }
+  authService = inject(Auth);
 
   login() {
-    if (this.validateLogin(this.user.email, this.user.password)) {
-      localStorage.setItem('loggedInUser', JSON.stringify(this.user.email));
-      this.loginValid = true;
-      this.router.navigate(['/dashboard']);
-    } else {
-      this.loginValid = false;
-    }
+    console.log('Login attempt with:', this.user);
+    this.authService.login(this.user.email, this.user.password).subscribe({
+      next: (res: any) => {
+        localStorage.setItem('token', res.token);
+        this.loginValid = true;
+        this.router.navigate(['/dashboard']);
+        console.log('Login successful', res);
+      },
+      error: (error) => {
+        console.error('Login failed', error);
+        this.loginValid = false;
+      },
+    });
   }
 }

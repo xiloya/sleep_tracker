@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-register',
@@ -33,10 +34,16 @@ export class Register {
   };
 
   router = inject(Router);
-
+  authService = inject(Auth);
   register() {
-    // Save user to localStorage just for testing
-    localStorage.setItem('registeredUser', JSON.stringify(this.user));
-    this.router.navigate(['/login']);
+    this.authService.register(this.user).subscribe({
+      next: (res: any) => {
+        alert('Register successful');
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        console.error('Register failed', error);
+      },
+    });
   }
 }

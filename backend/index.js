@@ -10,7 +10,7 @@ app.use(express.json());
 connectDB();
 app.use(
   cors({
-    origin: "http://localhost:4200",
+    origin: "http://localhost",
     credentials: true,
   })
 );

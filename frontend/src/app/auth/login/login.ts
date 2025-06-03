@@ -40,7 +40,7 @@ export class Login {
     console.log('Login attempt with:', this.user);
     this.authService.login(this.user.email, this.user.password).subscribe({
       next: (res: any) => {
-        localStorage.setItem('token', res.token);
+        localStorage.setItem('token', res.accessToken);
         this.loginValid = true;
         this.router.navigate(['/dashboard']);
         console.log('Login successful', res);

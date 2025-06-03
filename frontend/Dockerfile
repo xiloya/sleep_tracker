@@ -11,7 +11,7 @@ COPY . .
 RUN npm install -g @angular/cli
 RUN ng build --configuration production
 
-FROM nginx:stable-alpine as final
+FROM nginx:stable-alpine AS final
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
@@ -20,5 +20,3 @@ COPY --from=build /app/dist/sleep_tracker/browser /usr/share/nginx/html
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
-
-

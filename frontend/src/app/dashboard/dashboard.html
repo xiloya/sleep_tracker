@@ -1,1 +1,121 @@
-<p>dashboard works!</p>
+<mat-toolbar color="primary">
+  <span class="app-title">Sleep Tracker</span>
+  <span class="spacer"></span>
+
+  <mat-icon>account_circle</mat-icon>
+
+  <button mat-button [matMenuTriggerFor]="userMenu" class="username">
+    {{ userFirstName || 'User' }}
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
+
+  <mat-menu #userMenu="matMenu">
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  </mat-menu>
+</mat-toolbar>
+
+<mat-card class="dashboard-card">
+  <button mat-raised-button color="primary" (click)="toggleForm()">
+    <mat-icon>{{ showForm ? 'close' : 'add' }}</mat-icon>
+    {{ showForm ? 'Cancel' : 'New Entry' }}
+  </button>
+
+  <form *ngIf="showForm" class="entry-form" (ngSubmit)="addEntry()">
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          [(ngModel)]="date"
+          name="date"
+          required
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>Sleep Time</mat-label>
+        <input
+          matInput
+          [ngModel]="sleepTime"
+          (ngModelChange)="sleepTime = $event"
+          [matTimepicker]="sleepPicker"
+          name="sleepTime"
+          required
+        />
+        <mat-timepicker-toggle
+          matSuffix
+          [for]="sleepPicker"
+        ></mat-timepicker-toggle>
+        <mat-timepicker #sleepPicker></mat-timepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Wake Time</mat-label>
+        <input
+          matInput
+          [ngModel]="wakeTime"
+          (ngModelChange)="wakeTime = $event"
+          [matTimepicker]="wakePicker"
+          name="wakeTime"
+          required
+        />
+        <mat-timepicker-toggle
+          matSuffix
+          [for]="wakePicker"
+        ></mat-timepicker-toggle>
+        <mat-timepicker #wakePicker></mat-timepicker>
+      </mat-form-field>
+    </div>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!sleepTime || !wakeTime"
+    >
+      Add Entry
+    </button>
+  </form>
+
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    *ngIf="dataSource.length"
+    class="sleep-table"
+  >
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let entry">{{ entry.date }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="sleep">
+      <th mat-header-cell *matHeaderCellDef>Sleep Time</th>
+      <td mat-cell *matCellDef="let entry">{{ entry.sleep }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="wake">
+      <th mat-header-cell *matHeaderCellDef>Wake Time</th>
+      <td mat-cell *matCellDef="let entry">{{ entry.wake }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef>Duration</th>
+      <td mat-cell *matCellDef="let entry">{{ entry.duration }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+    <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+  </table>
+
+  <p *ngIf="!dataSource.length && !showForm">
+    No entries yet. Add your first sleep entry.
+  </p>
+</mat-card>

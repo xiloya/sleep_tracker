@@ -1,3 +1,5 @@
+FROM node:18-alpine
+
 ARG JWT_SECRET
 ARG MONGODB_URI
 ARG DB_NAME
@@ -8,21 +10,14 @@ ENV MONGODB_URI=$MONGODB_URI
 ENV DB_NAME=$DB_NAME
 ENV PORT=$PORT
 
-FROM node:18-alpine
-
 WORKDIR /app
-
 
 COPY package*.json ./
 
-
 RUN npm ci --only=production
-
 
 COPY . .
 
-
 EXPOSE 5000
-
 
 CMD ["node", "index.js"]

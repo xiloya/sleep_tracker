@@ -17,7 +17,12 @@ jobs:
 
       - name: Build and push backend image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/projet_sleep_tracker-backend ./backend
+          docker build \
+            --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            --build-arg MONGODB_URI=${{ secrets.MONGODB_URI }} \
+            --build-arg DB_NAME=${{ secrets.DB_NAME }} \
+            --build-arg PORT=${{ secrets.PORT }} \
+            -t ${{ secrets.DOCKER_USERNAME }}/projet_sleep_tracker-backend ./backend
           docker push ${{ secrets.DOCKER_USERNAME }}/projet_sleep_tracker-backend
 
       - name: Build and push frontend image
@@ -34,33 +39,27 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
 
-            
             docker network inspect sleepnet >/dev/null 2>&1 || docker network create sleepnet
 
-            
             docker pull ${{ secrets.DOCKER_USERNAME }}/projet_sleep_tracker-backend
             docker pull ${{ secrets.DOCKER_USERNAME }}/projet_sleep_tracker-frontend
 
-          
             docker stop back || true && docker rm back || true
             docker stop front || true && docker rm front || true
             docker stop mongo || true && docker rm mongo || true
 
-           
             docker run -d --name mongo \
               --network sleepnet \
               --restart always \
               -p 27017:27017 \
-              ${{ secrets.DOCKER_USERNAME }}/projet_sleep_tracker-mongo
+              mongo
 
-            
             docker run -d --name back \
               --network sleepnet \
               --restart always \
               -p 5000:5000 \
               ${{ secrets.DOCKER_USERNAME }}/projet_sleep_tracker-backend
 
-            
             docker run -d --name front \
               --network sleepnet \
               --restart always \

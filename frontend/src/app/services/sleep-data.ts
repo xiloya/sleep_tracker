@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environments';
 
@@ -19,9 +19,14 @@ export class SleepDataService {
   private apiUrl = environment.apiUrl + '/sleepdata';
 
   constructor(private http: HttpClient) {}
-
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
   getUserSleepData(userId: string): Observable<SleepEntry[]> {
-    return this.http.get<SleepEntry[]>(`${this.apiUrl}/${userId}`);
+    return this.http.get<SleepEntry[]>(`${this.apiUrl}/${userId}`, {
+      headers: this.getAuthHeaders(),
+    });
   }
 
   createSleepData(data: {
@@ -30,6 +35,8 @@ export class SleepDataService {
     sleepTime: string;
     wakeTime: string;
   }): Observable<any> {
-    return this.http.post(`${this.apiUrl}`, data);
+    return this.http.post(`${this.apiUrl}`, data, {
+      headers: this.getAuthHeaders(),
+    });
   }
 }

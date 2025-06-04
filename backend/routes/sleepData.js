@@ -3,9 +3,6 @@ const router = express.Router();
 const sleepDataController = require("../controllers/sleepDataController");
 const checkAuth = require("../middleware/auth.middleware");
 
-router.post("/", checkAuth, sleepDataController.createSleepData);
-router.get("/:userId", checkAuth, sleepDataController.getUserSleepData);
-
 module.exports = router;
 
 router.post("/", checkAuth, sleepDataController.createSleepData);

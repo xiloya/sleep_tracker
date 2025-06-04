@@ -8,6 +8,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.15.1",
     "node-input-validator": "^4.5.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^11.1.0",
     "validatorjs": "^3.22.1"
   },
@@ -17,9 +19,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
-  "keywords": []
+  "keywords": [],
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.1.1"
+  }
 }

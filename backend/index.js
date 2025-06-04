@@ -23,3 +23,19 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+module.exports = app;
+
+const { swaggerUi, specs } = require("./swagger");
+
+app.use(
+  "/api-docs",
+  (req, res, next) => {
+    res.setHeader(
+      "Content-Security-Policy",
+      "default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;"
+    );
+    next();
+  },
+  swaggerUi.serve,
+  swaggerUi.setup(specs)
+);
